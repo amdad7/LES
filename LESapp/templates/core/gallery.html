@@ -1,0 +1,282 @@
+{%load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .row div {
+            padding: 20px 10px;
+            border: 1px solid;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/gallery.css' %}">
+    <title>GALLERY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <script>
+        $(document).ready(()=>{
+            var loginb=document.getElementById('loginb')
+            var logoutb=document.getElementById('logoutb')
+            var dash=document.getElementById('dash')
+
+
+            $.get("{%url 'accounts:isloggedin'%}",(res)=>{
+                if (res.status){
+                    logoutb.style.display="inline-block"
+                    loginb.style.display="none"
+                    dash.style.display="inline-block"
+                }
+            })
+            $("#loginb").click((e)=>{
+                e.preventDefault()
+                window.location.replace("{%url 'accounts:login'%}")
+            })
+            $("#logoutb").click((e)=>{
+                e.preventDefault()
+                $.get("{% url 'accounts:logout' %}",(res)=>{
+                    window.location.replace("{%url 'accounts:login'%}")
+                })
+                
+            })
+            $.ajax({
+                url:"{%url 'core:getvideos' %}",
+                data:$.param({'pgno':1,'nos':8}),
+                success:(res)=>{
+                    console.log(res)
+                }
+            })
+
+            
+
+            
+       })     
+       
+    </script>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark ">
+            <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'core:home'%}">home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">NoticeBoard</a>
+                    </li>
+                    <li id="dash" class="nav-item" style="display: none;">
+                        <a class="nav-link" href="#">Dashboard</a>
+                    </li>
+
+                </ul>
+
+                <button id="loginb" class="btn btn-success text-dark" type="submit">log in</button>
+                <button id="logoutb" class="btn btn-success text-dark" type="submit" style="display: none;">log out</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid pb-video-container">
+        <div class="col-md-10 offset-md-1">
+            <h3 class="text-xs-center">GALLERY</h3>
+            <div class="row pb-row">
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-row">
+            <div style="background-color:black;" class="col-md-3 pb-video">
+                <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                <div class="progress" style="background: #000; height: 75px;">
+                    <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                </div>
+            </div>
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+                <div style="background-color:black;" class="col-md-3 pb-video">
+                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
+                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
+                    <div class="progress" style="background: #000; height: 75px;">
+                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- pagination -->
+    <div class="wrapper">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><button class="page-link" href="#">Previous</button></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                <li class="page-item"><a class="page-link" href="#">6</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </div>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .navbar {
+            background: #131313;
+            padding: 1rem 8rem;
+            z-index: 1000;
+        }
+        
+        .navbar .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .navbar .navbar-brand:hover {
+            color: #00bf7f;
+        }
+        
+        #navbarSupportedContent>ul>li:nth-child(n)>a {
+            color: #fff;
+            font-size: 1.1rem;
+            padding: 0 0.8;
+        }
+        
+        #navbarSupportedContent>ul>li:nth-child(n)>a:hover {
+            color: #00bf85;
+        }
+        
+        #navbarSupportedContent>button {
+            background-color: #00bf85;
+            font-weight: 600;
+            padding: 0.4rem 1.4rem;
+            border-radius: 30px;
+        }
+        
+        #navbarSupportedContent>button:hover {
+            background-color: aqua;
+        }
+        
+        .pb-video-container {
+            padding-top: 120px;
+            background: #1DB954;
+            font-family: sans-serif;
+        }
+        
+        body>div>div>h3 {
+            font-weight: 800;
+        }
+        
+        .pb-video {
+            border: 1px solid #e6e6e6;
+            padding: 5px;
+        }
+        
+        .pb-video:hover {
+            background: #2c3e50;
+        }
+        
+        .pb-video-frame {
+            transition: width 2s, height 2s;
+        }
+        
+        .pb-video-frame:hover {
+            height: 300px;
+        }
+        
+        .pb-row {
+            margin-bottom: 10px;
+        }
+        
+        @media screen and (max-width: 988px) {
+            .navbar {
+                padding: 1rem;
+            }
+            #navbarSupportedContent>ul {
+                padding-left: 0.8rem;
+            }
+            #navbarSupportedContent>ul>li:nth-child(n)>a {
+                padding: 0.8rem 0;
+            }
+            .mid .hero h2 {
+                font-size: 2.5rem;
+            }
+            .mid .hero p {
+                font-size: 1rem;
+            }
+            .mid .hero a {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+
+
+
+
+</body>
+
+</html>
