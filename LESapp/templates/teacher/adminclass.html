@@ -1,0 +1,58 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LES ADMIN</title>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'css/adminclass.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <script>
+        $(document).ready(()=>{
+            $.get("{%url 'accounts:isloggedin'%}",(res)=>{
+                if (!res.status || !res.teacher){
+                    window.location.replace("{%url 'core:home'%}")
+                }
+            })
+        })
+    </script>
+
+    <div class="container">
+        <div class="Box">
+            <div>
+                <i class="fas fa-users"></i>
+                <h2>P-1</h2>
+                <p>
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                </p>
+                <a href="#">VIDEOS</a>
+                <a href="#">STUDENTS</a>
+            </div>
+        </div>
+        <div class="Box">
+            <div>
+                <i class="fas fa-users"></i>
+                <h2>P-2</h2>
+                <p>
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                </p>
+                <a href="#">VIDEOS </a>
+                <a href="#">STUDENTS</a>
+            </div>
+        </div>
+
+    </div>
+    <a href="{%url 'core:home'%}" style="background-color: black; color: #fff;">Back To Main Site</a>
+
+
+
+
+
+</body>
+
+</html>

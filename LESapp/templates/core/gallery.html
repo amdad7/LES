@@ -28,13 +28,39 @@
             var loginb=document.getElementById('loginb')
             var logoutb=document.getElementById('logoutb')
             var dash=document.getElementById('dash')
+            var loginstatus=false
 
+
+
+            var cpage=window.location.pathname.split('/')[2]
+            pagination=()=>{
+                var ul=document.getElementById('pagetable')
+                var prev=document.getElementById('prevpage')
+                var next=document.getElementById('nextpage')
+                var host=window.location.hostname
+                if (window.location.hostname=='127.0.0.1'){
+                    var host='127.0.0.1'+":8000"
+                }
+                var prevlin="http://"+host+"/gallery/"+(parseInt(cpage)-1).toString()
+                var nextlin="http://"+host+"/gallery/"+(parseInt(cpage)+1).toString()
+                if (cpage!=1){
+                prev.href=prevlin}
+                next.href=nextlin
+            }
+            
+            pagination()
 
             $.get("{%url 'accounts:isloggedin'%}",(res)=>{
                 if (res.status){
+                    loginstatus=true
                     logoutb.style.display="inline-block"
                     loginb.style.display="none"
                     dash.style.display="inline-block"
+                    if (res.teacher){
+                        var ad=document.getElementById('adminconsole')
+                        //ad.style.display="inline-block"
+                        ad.setAttribute("style","text-align: center; display: inline-block;")
+                    }
                 }
             })
             $("#loginb").click((e)=>{
@@ -44,17 +70,116 @@
             $("#logoutb").click((e)=>{
                 e.preventDefault()
                 $.get("{% url 'accounts:logout' %}",(res)=>{
-                    window.location.replace("{%url 'accounts:login'%}")
+                    //window.location.replace("{%url 'accounts:login'%}")
+                    window.location.reload()
                 })
                 
             })
             $.ajax({
                 url:"{%url 'core:getvideos' %}",
-                data:$.param({'pgno':1,'nos':8}),
+                data:$.param({'pgno':cpage,'nos':8}),
                 success:(res)=>{
-                    console.log(res)
+                    $.ajax({
+                        url:"{%url 'core:getfullvideostatus' %}",
+                        success:(response)=>{
+                            var perc=response.perc
+                            console.log(res)
+                            console.log(perc)
+                    createnewrow=(maindiv)=>{
+                        var newrow=document.createElement('div')
+                        newrow.className="row pb-row"
+                        maindiv.appendChild(newrow)
+                        return newrow
+                    }
+                    addvideo=(row,i)=>{
+                        
+                        var vdiv=document.createElement('div')   
+                        vdiv.classList.add("videolist","col-md-3","pb-video")
+                        vdiv.style.backgroundColor="#000"
+                        vdiv.id=res[i].video_id
+                        
+                        var image=document.createElement('IMG')    
+                        image.className="pb-video-frame"
+                
+                        image.height="230"
+                        image.src=res[i].thumbnail
+                     
+                        var p1=document.createElement('p')
+                        p1.classList.add("text-xs-center")
+                        var labeltext=document.createTextNode(res[i].title)
+                        p1.style.backgroundColor="#fff"
+                        p1.style.color="#000"
+                        p1.style.fontWeight="650"
+                        p1.style.fontFamily="sans-serif"
+                        p1.appendChild(labeltext)
+                       
+                        var progressdiv=document.createElement('div')
+                        progressdiv.className="progress"
+                        progressdiv.style.backgroundColor="#000"
+                        progressdiv.style.height="75px"
+
+                        var bardiv=document.createElement('div')
+                        bardiv.id="bar"+res[i].video_id
+                        bardiv.className="progress-bar"
+                        bardiv.role="progressbar"
+                        bardiv.style.width=(perc[res[i].video_id]).toString()+"%"
+                        bardiv.style.backgroundColor="#01ca87"
+                        bardiv.setAttribute('aria-valuemin',"0%")
+                        bardiv.setAttribute('aria-valuenow',(perc[res[i].video_id]).toString()+"%")
+                        bardiv.setAttribute('aria-valuemax',"100%")
+                        //bardiv.aria-valuenow = "25%"
+                        //bardiv.aria-valuemin = "0%"
+                        //bardiv.aria-valuemax = "100%"
+                        var textbar=document.createTextNode((perc[res[i].video_id]).toString()+"%")
+                        bardiv.appendChild(textbar)
+                        progressdiv.appendChild(bardiv)
+
+                        vdiv.appendChild(image)
+                        vdiv.appendChild(p1)
+                        vdiv.appendChild(progressdiv)
+                        row.appendChild(vdiv)
+                        
+                        
+                    }
+                    var maindiv=document.getElementById('mainvideocontainer')
+                    //console.log(maindiv.innerHTML)
+                    var count=0
+                    for (var i=0;i<res.length;i++){
+                        if (count==0){
+                            var row=createnewrow(maindiv)
+                            console.log(row)
+                        }
+                        else if(count==4){
+                            count=0
+                            console.log(row.innerHTML)
+                        }
+                        addvideo(row,i)
+                        count=count+1
+
+                    }
+                    $(".videolist").click(function() {
+                        var id=$(this).attr('id')
+                        var host=window.location.hostname
+                        var lin="https://"+host+"/video/"+id
+                        if (window.location.hostname=='127.0.0.1'){
+                            var host='127.0.0.1'+":8000"
+                            var lin="http://"+host+"/video/"+id
+                        }
+                        
+                        window.location.replace(lin)
+            })
+
+                        }
+
+                    })
+
+                   
+                    
+                    
                 }
             })
+         
+            
 
             
 
@@ -63,6 +188,7 @@
        
     </script>
     <header>
+        <div style="text-align: center;"><div id="adminconsole" style="text-align: center; display: none;"><a href="{%url 'teacher:adminclass'%}" style="color:#00bf7f;"> <strong>Admin Panel</strong></a></div></div>
         <nav class="navbar navbar-expand-lg navbar-dark ">
             <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,85 +219,19 @@
     </header>
 
     <div class="container-fluid pb-video-container">
-        <div class="col-md-10 offset-md-1">
+        <div id="mainvideocontainer" class="col-md-10 offset-md-1">
             <h3 class="text-xs-center">GALLERY</h3>
-            <div class="row pb-row">
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row pb-row">
-            <div style="background-color:black;" class="col-md-3 pb-video">
-                <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                <div class="progress" style="background: #000; height: 75px;">
-                    <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                </div>
-            </div>
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-                <div style="background-color:black;" class="col-md-3 pb-video">
-                    <img class="pb-video-frame" width="100%" height="230" src="251618.jpg" alt="">
-                    <label class="form-control label-warning text-xs-center">INNA - Gimme Gimme</label>
-                    <div class="progress" style="background: #000; height: 75px;">
-                        <div class="progress-bar" role="progressbar" style="width: 25%; background:#01ca87;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                    </div>
-                </div>
-            </div>
+            
             </div>
         </div>
     </div>
     <!-- pagination -->
     <div class="wrapper">
         <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item"><button class="page-link" href="#">Previous</button></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item"><a class="page-link" href="#">6</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <ul id="pagetable" class="pagination">
+                <li  class="page-item"><a id="prevpage" class="page-link" href="#">Previous</a></li>
+             
+                <li  class="page-item"><a id="nextpage" class="page-link" href="#">Next</a></li>
             </ul>
         </nav>
         

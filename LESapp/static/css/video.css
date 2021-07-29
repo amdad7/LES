@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+html {
+    scroll-behavior: smooth;
+}
+
+.navbar {
+    background: #131313;
+    padding: 1rem 8rem;
+    z-index: 1000;
+}
+
+.navbar .navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.navbar .navbar-brand:hover {
+    color: #00bf7f;
+}
+
+#navbarSupportedContent>ul>li:nth-child(n)>a {
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 0 0.8;
+}
+
+#navbarSupportedContent>ul>li:nth-child(n)>a:hover {
+    color: #00bf85;
+}
+
+#navbarSupportedContent>button {
+    background-color: #00bf85;
+    font-weight: 600;
+    padding: 0.4rem 1.4rem;
+    border-radius: 30px;
+}
+
+#navbarSupportedContent>button:hover {
+    background-color: aqua;
+}
+
+@media screen and (max-width: 988px) {
+    .navbar {
+        padding: 1rem;
+    }
+    #navbarSupportedContent>ul {
+        padding-left: 0.8rem;
+    }
+    #navbarSupportedContent>ul>li:nth-child(n)>a {
+        padding: 0.8rem 0;
+    }
+}
+
+.progress-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 30px;
+}
+
+.progress {
+    height: 10px;
+    background: #000;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 40px;
+    overflow: visible;
+    position: relative;
+}
+
+.progress .progress-bar {
+    background: #fff;
+    border-radius: 0;
+    position: relative;
+    -webkit-animation: animate-positive 2s;
+    animation: animate-positive 2s;
+}
+
+.progress .progress-bar:before {
+    content: "";
+    width: 100%;
+    border-top: 10px double #f95738;
+    border-right: 25px solid #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress .progress-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    position: absolute;
+    top: -32px;
+    right: -5px;
+}
+
+.progress.yellow .progress-bar:before {
+    border-top-color: #ecb82d;
+}
+
+.progress.green .progress-bar:before {
+    border-top-color: #65c168;
+}
+
+.progress.blue .progress-bar:before {
+    border-top-color: #165692;
+}
+
+@-webkit-keyframes animate-positive {
+    0% {
+        width: 0;
+    }
+}
+
+@keyframes animate-positive {
+    0% {
+        width: 0;
+    }
+}

@@ -1,0 +1,242 @@
+{%load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Player</title>
+    <link rel="stylesheet" href="{% static 'css/video.css'%}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <script>
+        
+        var tag = document.createElement('script');
+    
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+
+            
+
+
+
+        
+    var player, timer, timeSpent = [], display = document.getElementById('display');
+    var vid=window.location.pathname.split('/')[2] 
+    var loggedin=0
+    var sendpercentage=0
+    var inipercentage=0
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player( 'player', {
+            height: '390',
+              width: '640',
+              videoId: vid,
+              playerVars: {
+                'playsinline': 1
+              },
+    
+            events: { 'onStateChange': onPlayerStateChange }
+        });
+        var avtime1=document.getElementById('avtime1')
+        var mytime1=document.getElementById('mytime1')
+        var avtime2=document.getElementById('avtime2')
+        var mytime2=document.getElementById('mytime2')
+        
+        $.ajax({
+            url:"{%url 'core:getinfo' %}",
+            data:$.param({'video_id':vid}),
+            success:(res)=>{
+                //console.log(res)
+                timeSpent=res.timelist
+                inipercentage=res.percentage
+                //console.log(timeSpent)
+                //console.log(timeSpent)
+                loggedin=res.status
+                avtime1.style.width=res.avpercentage+"%"
+                avtime2.innerText=res.avpercentage+"%"
+                
+                mytime1.style.width=(res.percentage).toString()+"%"
+                //mytime1.style.width="100%"
+                mytime2.innerText=(res.percentage).toString()+"%"
+
+            }
+        })
+    }
+    
+    function onPlayerStateChange(event) {
+        //console.log(event)
+        if (event.data==2 || event.data==0){
+            //console.log(loggedin)
+            clearInterval(timer);
+            if (loggedin && sendpercentage){
+                $.ajax({
+                    type:"POST",
+                    url:"{%url 'core:postvdata'%}",
+                    data:{'video_id':vid,'timelist':timeSpent.toString(),'percentage':sendpercentage,'inipercentage':inipercentage},
+                    success:(res)=>{
+                        console.log(res)
+                        //console.log('success')
+                    },
+                    error:(err)=>{
+                        //console.log(err)
+                    }
+                })
+            }
+        }
+        
+        else if(event.data === 1) { // Started playing
+            //console.log(timeSpent)
+            if(timeSpent.length<2){
+                for(var i=0, l=parseInt(player.getDuration()); i<l; i++) timeSpent.push(0);
+            }
+            timer = setInterval(record,100);
+            //console.log(timeSpent)
+        } else {
+            clearInterval(timer);
+        }
+    }
+    
+    function record(){
+        //console.log('hi')
+        timeSpent[ parseInt(player.getCurrentTime()) ] = 1;
+        showPercentage();
+    }
+    
+    function showPercentage(){
+        var display = document.getElementById('display');
+        var percent = 0;
+        for(var i=0, l=timeSpent.length; i<l; i++){
+            if(timeSpent[i]=='1') percent++;
+        }
+        percent = Math.round(percent *100 / timeSpent.length);
+
+        sendpercentage=percent
+        //console.log(timeSpent.length)
+        //var avtime1=document.getElementById('avtime1')
+        var mytime1=document.getElementById('mytime1')
+        //var avtime2=document.getElementById('avtime2')
+        //console.log(percent)
+        var mytime2=document.getElementById('mytime2')
+        mytime1.style.width=percent.toString()+"%"
+        mytime2.innerText=percent.toString()+"%"
+    }
+
+      
+        
+    </script>
+    <script>
+        $(document).ready(()=>{
+            var loginb=document.getElementById('loginb')
+            var logoutb=document.getElementById('logoutb')
+            var dash=document.getElementById('dash')
+            var loginstatus=false
+            
+            $.get("{%url 'accounts:isloggedin'%}",(res)=>{
+                if (res.status){
+                    loginstatus=true
+                    logoutb.style.display="inline-block"
+                    loginb.style.display="none"
+                    dash.style.display="inline-block"
+                }
+            })
+            $("#loginb").click((e)=>{
+                e.preventDefault()
+                //window.location.replace("{%url 'accounts:login'%}")
+                window.location.reload()
+            })
+            $("#logoutb").click((e)=>{
+                e.preventDefault()
+                $.get("{% url 'accounts:logout' %}",(res)=>{
+                    window.location.replace("{%url 'accounts:login'%}")
+                })
+                
+            })
+        })
+    </script>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark ">
+            <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'core:home'%}">home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'core:gallery' 1%}">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">NoticeBoard</a>
+                    </li>
+                    <li id="dash" class="nav-item" style="display: none;">
+                        <a class="nav-link" href="#">Dashboard</a>
+                    </li>
+
+                </ul>
+
+                <button id="loginb" class="btn btn-success text-dark" type="submit">log in</button>
+                <button id="logoutb" class="btn btn-success text-dark" type="submit" style="display: none;">log out</button>
+            </div>
+        </nav>
+    </header>
+
+    <div style="background-color: #000">
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center mx-auto ">
+
+            <!--Grid column-->
+            <div class="col-md-7">
+
+                <p class="h5 mb-4" style="color: #00bf7f">ATTENTION-DO NOT SKIP THE VIDEO...EVERY SECOND IS MONITORED...!!!!!</p>
+                <p class="h5 mb-4" style="color: #00bf7f">PLEASW WATCH IT HERE TO GET YOUR VIEW RECORDED ie: DONT GO TO YOUTUBE!! </p>
+                <div class="embed-responsive embed-responsive-16by9 hoverable">
+                    <div id="player"></div>
+<p id="display"></p>
+                </div>
+
+            </div>
+            <!--Grid column-->
+        </div>
+        <br>
+    </div>
+    <DIV style="background: #000;">
+        <div class="container" style="background: #000;">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="progress-title" style="color: #00bf7f;">My View Time</h3>
+                    
+                    
+                    <div class="progress">
+                        <div id="mytime1" class="progress-bar" style="width:0%;">
+                            <div id="mytime2" class="progress-value" style="color: #00bf7f;" aria-valuemin="0" aria-valuemax="100">65%</div>
+                        </div>
+                    </div>
+                
+                    <h3 class="progress-title" style="color: #00bf7f;">Average view time</h3>
+                    <div class=" progress yellow ">
+                        <div id="avtime1" class="progress-bar " style="width:0%; ">
+                            <div id="avtime2" class="progress-value " style="color: #6d9b8b;" aria-valuemin="0" aria-valuemax="100">87%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </DIV>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js " integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1 " crossorigin="anonymous "></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js " integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM " crossorigin="anonymous "></script>
+
+</body>
+
+</html>

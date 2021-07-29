@@ -31,6 +31,11 @@
                     logoutb.style.display="inline-block"
                     loginb.style.display="none"
                     dash.style.display="inline-block"
+                    if (res.teacher){
+                        var ad=document.getElementById('adminconsole')
+                        //ad.style.display="inline-block"
+                        ad.setAttribute("style","text-align: center; display: inline-block;")
+                    }
                 }
             })
             $("#loginb").click((e)=>{
@@ -40,7 +45,8 @@
             $("#logoutb").click((e)=>{
                 e.preventDefault()
                 $.get("{% url 'accounts:logout' %}",(res)=>{
-                    window.location.replace("{%url 'accounts:login'%}")
+                    //window.location.replace("{%url 'accounts:login'%}")
+                    window.location.reload()
                 })
                 
             })
@@ -50,6 +56,7 @@
     </script>
     
     <header>
+        <div style="text-align: center;"><div id="adminconsole" style="text-align: center; display: none;"><a href="{%url 'teacher:adminclass'%}" style="color:#00bf7f;"> <strong>Admin panel</strong></a></div></div>
         <nav class="navbar navbar-expand-lg navbar-dark ">
             <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

@@ -31,4 +31,8 @@ def is_loggedin(request):
     data={'status':False}
     if request.user.is_authenticated:
         data['status']=True
+        t=Teacher.objects.all().filter(user=request.user)
+        data['teacher']=0
+        if len(t)>0:
+            data['teacher']=1
     return JsonResponse(data)    

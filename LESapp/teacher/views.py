@@ -30,3 +30,6 @@ def Update_video_db(request):
                 )
                 video.save()
     return JsonResponse({'status':1,'messege':'successfully updated database'})            
+
+def adminclass(request):
+    return render(request,'teacher/adminclass.html')
