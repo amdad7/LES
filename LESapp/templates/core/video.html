@@ -44,6 +44,11 @@
     
             events: { 'onStateChange': onPlayerStateChange }
         });
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState=="hidden");{
+            player.pauseVideo();}
+            
+        });
         var avtime1=document.getElementById('avtime1')
         var mytime1=document.getElementById('mytime1')
         var avtime2=document.getElementById('avtime2')
@@ -154,7 +159,7 @@
             $("#logoutb").click((e)=>{
                 e.preventDefault()
                 $.get("{% url 'accounts:logout' %}",(res)=>{
-                    window.location.replace("{%url 'accounts:login'%}")
+                    window.location="{%url 'accounts:login'%}"
                 })
                 
             })
@@ -162,7 +167,7 @@
     </script>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark ">
-            <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
+            <a class="navbar-brand" href="{%url 'core:home'%}">ENGLISH WITH SUBAIDA</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>

@@ -47,13 +47,17 @@ def update():
 
 
 def teacher_required(fun):
-    def inner(request):
+    def inner(request,*args, **kwargs):
         try:
             user=request.user
+            #print(user)
             teacher=Teacher.objects.get(user=user)
+            #print(teacher)
             if not teacher:
                 return HttpResponseForbidden()
+            return fun(request,*args, **kwargs)   
         except:
+            #print('err')
             return HttpResponseForbidden()
 
     return inner        

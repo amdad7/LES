@@ -9,7 +9,7 @@ class Student(models.Model):
     is_leader=models.BooleanField(default=False)
     phone_no=models.CharField(max_length=15,default=None)
     address=models.TextField(max_length=100,default=None)
-
+    rollno=models.IntegerField(default=0)
     choices=[
         ('C2','C2'),
         ('P5','P5')

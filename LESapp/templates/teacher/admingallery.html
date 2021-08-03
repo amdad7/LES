@@ -29,10 +29,10 @@
             var logoutb=document.getElementById('logoutb')
             var dash=document.getElementById('dash')
             var loginstatus=false
+            var cls=document.getElementById('cls').innerText
 
 
-
-            var cpage=window.location.pathname.split('/')[2]
+            var cpage=window.location.pathname.split('/')[3]
             pagination=()=>{
                 var ul=document.getElementById('pagetable')
                 var prev=document.getElementById('prevpage')
@@ -160,13 +160,12 @@
                     $(".videolist").click(function() {
                         var id=$(this).attr('id')
                         var host=window.location.hostname
-                        var lin="https://"+host+"/video/"+id
-                       /* if (window.location.hostname=='127.0.0.1'){
+                        var lin="https://"+host+"teacher/adminvideo/"+id
+                        if (window.location.hostname=='127.0.0.1'){
                             var host='127.0.0.1'+":8000"
-                            var lin="http://"+host+"/video/"+id
-                        } */
-                        
-                        window.location="/video/"+id
+                            var lin="http://"+host+"/teacher/adminvideo/"+id
+                        }
+                        window.location="/teacher/adminvideo/"+id+"?cls="+cls
             })
 
                         }
@@ -187,10 +186,11 @@
        })     
        
     </script>
+    <p id="cls" style="display: none;">{{cls}}</p>
     <header>
         <div style="text-align: center;" class="fixed-top"><div id="adminconsole" style="text-align: center; display: none;"><a href="{%url 'teacher:adminclass'%}" style="color:#00bf7f;"> <strong>Admin Panel</strong></a></div></div>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-            <a class="navbar-brand" href="{%url 'core:home'%}">ENGLISH WITH SUBAIDA</a>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top ">
+            <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -220,7 +220,7 @@
 
     <div class="container-fluid pb-video-container">
         <div id="mainvideocontainer" class="col-md-10 offset-md-1">
-            <h3 class="text-xs-center">GALLERY</h3>
+            <h3 class="text-xs-center">SELECT VIDEO TO VIEW DATA</h3>
             
             </div>
         </div>

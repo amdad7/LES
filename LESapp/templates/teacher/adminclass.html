@@ -20,24 +20,29 @@
                 }
             })
         })
+        var ontovideos=(cls)=>{
+            var url="{%url 'teacher:admingallery' 1%}"
+            window.location=(url+"?cls="+cls)
+            
+        }
     </script>
 
     <div class="container">
         <div class="Box">
             <div>
                 <i class="fas fa-users"></i>
-                <h2>P-1</h2>
+                <h2>P5</h2>
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                 </p>
-                <a href="#">VIDEOS</a>
-                <a href="#">STUDENTS</a>
+                <a onclick="ontovideos('P5')" >VIDEOS</a>
+                <a onclick="alert('feauture under development')">STUDENTS</a>
             </div>
         </div>
         <div class="Box">
             <div>
                 <i class="fas fa-users"></i>
-                <h2>P-2</h2>
+                <h2>C2</h2>
                 <p>
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                 </p>

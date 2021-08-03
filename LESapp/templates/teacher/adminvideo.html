@@ -1,0 +1,151 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'adminvideo.html' %}">
+    <title>student details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <script>
+        (function(fn) {var tr_=document.createElement('tr');
+            'use strict';
+            fn(window.jQuery, window, document);
+        }(function($, window, document) {
+            'use strict';
+
+            $(function() {
+                $('.sort-btn').on('click', '[data-sort]', function(event) {
+                    event.preventDefault();
+
+                    var $this = $(this),
+                        sortDir = 'desc';
+
+                    if ($this.data('sort') !== 'asc') {
+                        sortDir = 'asc';
+                    }
+
+                    $this.data('sort', sortDir).find('.fa').attr('class', 'fa fa-sort-' + sortDir);
+
+                    // call sortDesc() or sortAsc() or whathaveyou...
+                });
+            });
+        }));
+    </script>
+    <script>
+        
+        const getentries=(order)=>{
+            var cls=document.getElementById('cls').innerText
+            var video_id=window.location.pathname.split('/')[3]
+            $.ajax({
+                url:"{%url 'teacher:adminstudentlist'%}",
+                data:$.param({'video_id':video_id,'cls':cls,'order':order}),
+                success:(res)=>{
+                    var table=document.getElementById('table_entry')
+                    if (res.status){
+                        for (var i=0;i<res.datalist.length;i++){
+                            var tr_=document.createElement('tr');
+                            var th_=document.createElement('th');
+                            var td1=document.createElement('td')
+                            var td2=document.createElement('td')
+                            var td3=document.createElement('td')
+
+                            th_.innerText=res.datalist[i][0]
+                            th_.setAttribute('scope','row')
+                            td1.innerText=res.datalist[i][1]
+                            td2.innerText=res.datalist[i][2]
+                            td3.innerText=res.datalist[i][3]
+
+                            tr_.className="entries"
+                            tr_.appendChild(th_)
+                            tr_.appendChild(td1)
+                            tr_.appendChild(td2)
+                            tr_.appendChild(td3)
+                            table.appendChild(tr_)
+                            
+                        }
+                    }
+                    else{alert(res.messege)}
+                }
+            })
+
+        }
+
+        $(document).ready(()=>{
+            getentries('rollno')
+            
+        })
+        const gohome=(e)=>{
+            //e.preventDefault()
+            window.location="{%url 'core:home'%}"
+        }
+        const changeclass=(e)=>{
+            window.location="{%url 'teacher:adminclass'%}"
+        }
+        const changevideo=(e)=>{
+            var cls=document.getElementById('cls').innerText
+            window.location="{%url 'teacher:admingallery' 1%}"+"?cls="+cls
+        }
+        const sort=(order)=>{
+            console.log(order)
+            console.log('ok')
+            document.querySelectorAll('.entries').forEach(e => e.remove());
+            getentries(order)
+
+        }
+
+
+
+    </script>
+    <h2 id="cls" style="text-align: center;">{{cls}}</h2>
+    <h4 id="cls" style="text-align: center;">video:{{video}}</h4>
+    <div class="container">
+        <div class="btn-group sort-btn">
+            <button class="btn btn-primary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort</button>
+
+            <!-- .dropdown-toggle adds rounded borders and reduces padding. It does not trigger dropdowns. -->
+            <ul class="dropdown-menu">
+                <li><button onclick="sort('rollno')" class="btn btn-primary"  tabindex="-1" >Roll No</button></li>
+                <li><button onclick="sort('total')" class="btn btn-primary"  tabindex="-1" >Total watched</button></li>
+            </ul>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary">
+                    <button onclick="gohome()"> MainSite</button> 
+                  </label>
+                <label class="btn btn-secondary">
+              <button onclick="changeclass()" > change class</button> 
+            </label>
+            <label class="btn btn-secondary">
+                <button onclick="changevideo()" > change Video</button> 
+              </label>
+            </div>
+
+        </div>
+        
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Roll No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Total Watched (%)</th>
+                    <th scope="col">Last Watched</th>
+                </tr>
+            </thead>
+            <tbody id="table_entry">
+
+               
+            </tbody>
+        </table>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
