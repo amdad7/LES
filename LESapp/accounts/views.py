@@ -1,4 +1,4 @@
-from django.http.response import JsonResponse
+from django.http.response import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render
 from .models import *
 from django.contrib.auth import login,authenticate,logout
@@ -14,8 +14,13 @@ def login_user(request):
         password=request.POST.get('password')
         user=authenticate(username=username,password=password)
         if user is not None:
-            login(request, user)
-            return JsonResponse({'status':1,'messege':'success'})
+            try:
+                u=Student.objects.get(user=user)
+            except:
+                u=Teacher.objects.get(user=user)
+              
+            login(request, user)    
+            return JsonResponse({'status':1,'messege':'success','is_changed':u.is_changed})
         return JsonResponse({'status':0,'messege':'failed'})     
     else:
         return render(request,'accounts/login.html')
@@ -36,3 +41,23 @@ def is_loggedin(request):
         if len(t)>0:
             data['teacher']=1
     return JsonResponse(data)    
+
+@csrf_exempt
+@login_required
+def changepass(request):
+    u=request.user
+    username=u.username
+    st=Student.objects.get(user=u)
+    if request.method=="POST":
+        username1=request.POST.get('username')
+        password=request.POST.get('password')
+        if username!=username1:
+            return HttpResponseForbidden()
+        else:
+            u.set_password(password)
+            u.save()
+            st.is_changed=True
+            st.save()
+            return JsonResponse({'status':1})
+            
+    return render(request,'accounts/password.html',{'username':username})

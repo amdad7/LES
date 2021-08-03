@@ -11,5 +11,7 @@ urlpatterns=[
     path('gallery/<int:page>/',Gallery,name="gallery"),
     path('getfullvideostatus/',getfullvideostatus,name="getfullvideostatus"),
     path('video/<slug:slug>/',videoview,name="videoview"),
-    path('postvdata/',postvdata,name="postvdata")
+    path('postvdata/',postvdata,name="postvdata"),
+    path('dashboard/',dashboard,name="dashboard"),
+    path('noticeboard/',noticeboard,name="noticeboard")
 ]

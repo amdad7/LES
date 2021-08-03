@@ -110,3 +110,25 @@ def postvdata(request):
         return JsonResponse({'status':1})
     except:
         return JsonResponse({'status':0})
+
+
+@login_required
+def dashboard(request):
+    user=request.user
+    try:
+        st=Student.objects.get(user=user)
+        data={}
+        data['name']=st.name
+        data['email']=st.email
+        data['address']=st.address
+        data['phone']=st.phone_no
+        data['rollno']=st.rollno
+        data['class']=st.section
+    except:
+        data={}
+        pass    
+    return render(request,'core/dashboard.html',data)        
+
+
+def noticeboard(request):
+    return render(request,'core/notice.html')

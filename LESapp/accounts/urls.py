@@ -6,5 +6,6 @@ app_name='accounts'
 urlpatterns=[
     path('login/',login_user,name="login"),
     path('isloggedin/',is_loggedin,name="isloggedin"),
-    path('logout/',logout_,name="logout")
+    path('logout/',logout_,name="logout"),
+    path('changepass/',changepass,name="changepass")
 ]

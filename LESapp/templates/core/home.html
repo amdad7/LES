@@ -17,7 +17,11 @@
         }
     </style>
     <link rel="stylesheet" href="{%static 'css/home.css'%}">
+    <title>ES</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link rel = "icon" href ="{%static 'logo.png'%}" 
+        type = "image/x-icon">
 </head>
 
 <body>
@@ -58,7 +62,9 @@
     <header>
         <div style="text-align: center; " class="fixed-top"><div id="adminconsole" style="text-align: center; display: none;"><a href="{%url 'teacher:adminclass'%}" style="color:#00bf7f;"> <strong>Admin panel</strong></a></div></div>
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-            <a class="navbar-brand" href="#">ENGLISH WITH SUBAIDA</a>
+            <a class="navbar-brand" href="{%url 'core:home'%}"><img src="{%static 'logo.png' %}" alt="" class="img-responsive logo" style="height: 30px;
+                padding-right: 20px;
+                padding-left: 5px;"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -75,7 +81,7 @@
                         <a class="nav-link" href="#">NoticeBoard</a>
                     </li>
                     <li id="dash" class="nav-item" style="display: none;">
-                        <a class="nav-link" href="#">Dashboard</a>
+                        <a class="nav-link" href="{%url 'core:dashboard'%}">Dashboard</a>
                     </li>
 
                 </ul>
@@ -89,7 +95,7 @@
         
             <div class="hero text-center">
                 <h2 class="text-light display-4 font-weight-bold">English with Subaida</h2>
-                <p class="text-light mx-auto">English Learning Assistant (v-1) For Higher Secondary Students </p>
+                <p class="text-light mx-auto">English Learning Assistant (version-1.0) For Higher Secondary Students </p>
                 <a class="text-dark" href="{%url 'core:gallery' 1%}">Go to Videos</a>
             </div>
         </div>
