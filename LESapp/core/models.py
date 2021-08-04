@@ -9,7 +9,7 @@ class Videos(models.Model):
     video_id=models.CharField(max_length=100,blank=False)
     title=models.CharField(max_length=500,blank=True)
     thumbnail=models.CharField(max_length=1000)
-    average_viewtime=models.CharField(max_length=40,default=5)
+    average_viewtime=models.CharField(max_length=40,default=0)
     total_views=models.IntegerField(default=0)
     description=models.CharField(max_length=1000,blank=True)
     is_deleted=models.BooleanField(default=False)

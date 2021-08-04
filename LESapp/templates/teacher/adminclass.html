@@ -28,7 +28,16 @@
             
         }
     </script>
-
+    <script>
+        const update=()=>{
+            $.ajax({
+                url:"{%url 'teacher:updatedb'%}",
+                success:(res)=>{
+                    alert('succesfuly updated')
+                }
+            })
+        }
+    </script>
     <div class="container">
         <div class="Box">
             <div>
@@ -54,9 +63,10 @@
         </div>
 
     </div>
+    <div>
     <a href="{%url 'core:home'%}" style="background-color: black; color: #fff;">Back To Main Site</a>
-
-
+    <button onclick="update()">UPDATE DB</button>
+    </div>   
 
 
 

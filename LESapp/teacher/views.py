@@ -21,7 +21,7 @@ def Update_video_db(request):
         if i['id']:
             v=Videos.objects.filter(video_id=i['id'])
             if len(v)<1:
-                print(v)
+                
                 video=Videos.objects.create(
                     video_id=i['id'],
                     title=i['title'],
@@ -29,6 +29,7 @@ def Update_video_db(request):
                     description=i['description']
                 )
                 video.save()
+                 
     return JsonResponse({'status':1,'messege':'successfully updated database'})            
 
 @teacher_required
